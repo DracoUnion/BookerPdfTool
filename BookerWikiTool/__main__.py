@@ -244,6 +244,7 @@ def main():
     fetch_war_parser.add_argument("-q", "--query", action='store_true', help="whether to deduplicate with query")
     fetch_war_parser.add_argument("-f", "--fragment", action='store_true', help="whether to deduplicate with fragment")
     fetch_war_parser.add_argument("-p", "--proxy", help="proxy")
+    fetch_war_parser.set_defaults(vis=set())
     fetch_war_parser.set_defaults(func=fetch_webarchive)
 
     args = parser.parse_args()

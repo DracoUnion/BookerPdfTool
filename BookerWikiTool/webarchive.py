@@ -46,13 +46,3 @@ def fetch_webarchive(args):
             print(f'https://web.archive.org/web/{url}')
         
     ofile.close()
-
-
-def main():
-    parser = argparse.ArgumentParser(prog="fetch-webarchive", description="iBooker WIKI tool", formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("-v", "--version", action="version", version=f"BookerWikiTool version: {__version__}")
-    parser.set_defaults(vis=set())
-    
-        
-        
-if __name__ == '__main__': main()

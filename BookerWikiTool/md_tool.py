@@ -144,6 +144,10 @@ def summary_handle(args):
     # 读入文件列表
     dir = args.dir
     fnames = [f for f in os.listdir(dir) if f.endswith('.md')]
+    if 'README.md' in fnames:
+        idx = fnames.index('README.md')
+        del fnames[idx]
+        fnames.insert(0, 'README.md')
     toc = []
     for f in fnames:
         fullf = path.join(dir, f)
