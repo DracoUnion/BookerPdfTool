@@ -163,5 +163,6 @@ def md_align_handler(args):
     md2 = open(fname2, encoding='utf8').read()
     res = make_align(md1, md2)
     ofname = path.basename(fname1) + '_' + path.basename(fname2) + '.yaml'
-    open(ofname, 'w', encoding='utf8').write(yaml.safe_dump(res))
+    open(ofname, 'w', encoding='utf8').write(
+        yaml.safe_dump(res, allow_unicode=True))
     
