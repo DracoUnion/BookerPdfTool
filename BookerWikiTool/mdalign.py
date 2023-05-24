@@ -161,7 +161,7 @@ def md_align_handler(args):
        raise ValueError('请提供两个 MD 文件！')
     md1 = open(fname1, encoding='utf8').read()
     md2 = open(fname2, encoding='utf8').read()
-    res = md_align(md1, md2)
+    res = make_align(md1, md2)
     ofname = path.basename(fname1) + '_' + path.basename(fname2) + '.yaml'
     open(ofname, 'w', encoding='utf8').write(yaml.safe_dump(res))
     
