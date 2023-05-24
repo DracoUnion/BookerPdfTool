@@ -124,7 +124,7 @@ def recover_pre(md, pres):
         md = md.replace(f'[PRE{i}]', pre)
     return md
     
-def extreact_pre_handler(args):
+def extract_pre_handler(args):
     fname = args.fname
     if not fname.endswith('.md'):
         print('请提供MD文件')
