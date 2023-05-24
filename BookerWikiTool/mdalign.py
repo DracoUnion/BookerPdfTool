@@ -88,10 +88,22 @@ def make_align(md1, md2):
             continue
         idx1n = find_next_pref(r1, idx1 + 1, p2)
         idx2n = find_next_pref(r2, idx2 + 1, p1)
-        if idx1n < idx2n:
-            idx1 = idx1n
+        if idx1n - idx1 < idx2n - idx2:
+            while idx1 < idx1n:
+                res.append({
+                    'en': r1[idx1]['line'],
+                    'zh': '',
+                    'pref': r1[idx1]['prefs'],
+                })
+                idx1 += 1
         else:
-            idx2 = idx2n
+            while idx2 < idx2n:
+                res.append({
+                    'en': '',
+                    'zh': r2[idx2]['line'],
+                    'pref': r2[idx2]['prefs'],
+                })
+                idx2 += 1
             
     while idx1 < len(r1):
         res.append({
