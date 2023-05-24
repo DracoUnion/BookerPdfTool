@@ -33,6 +33,7 @@ from .codelint import *
 from .chatgpt import *
 from .medium import *
 from .webarchive import *
+from .mdalign import *
     
 def main():
     parser = argparse.ArgumentParser(prog="BookerWikiTool", description="iBooker WIKI tool", formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -246,6 +247,20 @@ def main():
     fetch_war_parser.add_argument("-p", "--proxy", help="proxy")
     fetch_war_parser.set_defaults(vis=set())
     fetch_war_parser.set_defaults(func=fetch_webarchive)
+
+    ext_pre_parser = subparsers.add_parser("ext-pre", help="extract pre from md")
+    ext_pre_parser.add_argument("fname", help="file name")
+    ext_pre_parser.set_defaults(func=extract_pre_handler)
+
+    rec_pre_parser = subparsers.add_parser("rec-pre", help="recover pre in md")
+    rec_pre_parser.add_argument("fname", help="file name")
+    rec_pre_parser.set_defaults(func=recover_pre_handler)
+
+    md_align_parser = subparsers.add_parser("md-align", help="align en and zh md file")
+    md_align_parser.add_argument("en", help="en file name")
+    md_align_parser.add_argument("zh", help="zh file name")
+    md_align_parser.set_defaults(func=md_align_handler)
+
 
     args = parser.parse_args()
     args.func(args)
