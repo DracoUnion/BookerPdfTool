@@ -2,8 +2,8 @@ import re
 import sys
 from os import path
 import yaml
-import shutil
 import json
+import os
 
 PREF_IND = r'(\x20{4}|\t)'
 PREF_OL = r'\d+\.\x20{2}'
@@ -151,7 +151,7 @@ def recover_pre_handler(args):
     pres = json.loads(open(json_fname, encoding='utf8').read())
     md = recover_pre(md, pres)
     open(fname, 'w', encoding='utf8').write(md)
-    shutil.remove(json_fname)
+    os.unlink(json_fname)
     
 def md_align_handler(args):
     fname1 = args.en
