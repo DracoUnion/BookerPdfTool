@@ -261,6 +261,11 @@ def main():
     md_align_parser.add_argument("zh", help="zh file name")
     md_align_parser.set_defaults(func=md_align_handler)
 
+    epub_para_parser = subparsers.add_parser("epub-para", help="format epub paragraphs")
+    epub_para_parser.add_argument("fname", help="file name")
+    epub_para_parser.add_argument("low", help="lower bound")
+    epub_para_parser.add_argument("high", help="upper bound")
+    epub_para_parser.set_defaults(func=format_para_epub)
 
     args = parser.parse_args()
     args.func(args)

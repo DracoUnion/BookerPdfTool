@@ -200,3 +200,49 @@ def exp_epub_chs(args):
     for i, ch in enumerate(chs):
         fname = path.join(dir, str(i).zfill(l) + '.html')
         open(fname, 'w', encoding='utf8').write(ch)
+        
+def format_para_epub(fname):
+    fname = args.file
+    lo = args.low
+    hi = args.high
+    if not fname.endswith('.epub'):
+        print('请提供EPUB')
+        return
+    bio = BytesIO(open(fname, 'rb').read())
+    zip = zipfile.ZipFile(bio, 'r', zipfile.ZIP_DEFLATED)
+    new_bio = BytesIO()
+    new_zip = zipfile.ZipFile(new_bio, 'w', zipfile.ZIP_DEFLATED)
+    
+    for n in zip.namelist():
+        print(n)
+        data = zip.read(n)
+        if n.endswith('.html'):
+            data = format_para(
+                data.decode('utf8'), lo, hi).encode('utf8')
+        new_zip.writestr(n, data)
+        
+    zip.close()
+    new_zip.close()
+    open(fname, 'wb').write(new_bio.getvalue())
+    print('done...')
+
+def format_para(html, lo, hi)
+    rt = pq(html)
+    el_ps = rt('p')
+    for el in el_ps:
+        el = pq(el)
+        if el.children().is_('img'): continue
+        if not el.next().is_('p'): continue
+        cont = (el.text() or '').trim()
+        if lo <= len(cont) <= hi and \
+           not re.search(r'[。！？：”]$', cont):
+            el.add_class('can_merge')
+    
+    for el in el_ps:
+        el = pq(el)
+        if not el.has_class('can_merge'):
+            continue
+        cont = (el.html() or '') + (el.next().html() or '')
+        el.next().html(cont)
+        el.remove()
+    return str(rt)
