@@ -201,8 +201,8 @@ def exp_epub_chs(args):
         fname = path.join(dir, str(i).zfill(l) + '.html')
         open(fname, 'w', encoding='utf8').write(ch)
         
-def format_para_epub(fname):
-    fname = args.file
+def format_para_epub(args):
+    fname = args.fname
     lo = args.low
     hi = args.high
     if not fname.endswith('.epub'):
