@@ -227,6 +227,7 @@ def format_para_epub(args):
     print('done...')
 
 def format_para(html, lo, hi):
+    html = re.sub(r'<\?xml[^>]*\?>', '', html)
     rt = pq(html)
     el_ps = rt('p')
     for el in el_ps:
