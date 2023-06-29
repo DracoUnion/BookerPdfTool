@@ -226,7 +226,7 @@ def format_para_epub(fname):
     open(fname, 'wb').write(new_bio.getvalue())
     print('done...')
 
-def format_para(html, lo, hi)
+def format_para(html, lo, hi):
     rt = pq(html)
     el_ps = rt('p')
     for el in el_ps:
