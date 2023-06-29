@@ -263,8 +263,8 @@ def main():
 
     epub_para_parser = subparsers.add_parser("epub-para", help="format epub paragraphs")
     epub_para_parser.add_argument("fname", help="file name")
-    epub_para_parser.add_argument("low", help="lower bound")
-    epub_para_parser.add_argument("high", help="upper bound")
+    epub_para_parser.add_argument("low", type=int, default=30, help="lower bound")
+    epub_para_parser.add_argument("high", type=int, default=35, help="upper bound")
     epub_para_parser.set_defaults(func=format_para_epub)
 
     args = parser.parse_args()
