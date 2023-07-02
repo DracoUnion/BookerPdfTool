@@ -3,6 +3,7 @@ import uuid
 import subprocess as subp
 import re
 import os
+import sys
 import shutil
 import json
 import yaml
@@ -123,7 +124,8 @@ def is_pic(fname):
     return bool(m and m.group(1) in ext)
 
 def find_cmd_path(name):
-    for p in os.environ.get('PATH', '').split(';'):
+    delim = ';' if sys.platform == 'win32' else ':'
+    for p in os.environ.get('PATH', '').split(delim):
         if path.isfile(path.join(p, name)) or \
             path.isfile(path.join(p, name + '.exe')):
             return p
