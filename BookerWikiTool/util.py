@@ -125,9 +125,13 @@ def is_pic(fname):
 
 def find_cmd_path(name):
     delim = ';' if sys.platform == 'win32' else ':'
+    suff = (
+        ['.exe', '.cmd', '.ps1']
+        if sys.platform == 'win32'
+        else ['', '.sh']
+    ) 
     for p in os.environ.get('PATH', '').split(delim):
-        if path.isfile(path.join(p, name)) or \
-            path.isfile(path.join(p, name + '.exe')):
+        if any(path.isfile(path.join(p, name + s)) for s in suff):
             return p
     return ''
     
