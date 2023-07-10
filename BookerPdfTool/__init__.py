@@ -4,7 +4,7 @@
 """BookerPdfTool
 https://github.com/apachecn/BookerPdfTool"""
 
-__author__ = "ApacheCN"
-__email__ = "apachecn@163.com"
+__author__ = "wizardforcel"
+__email__ = "wizard.z@qq.com"
 __license__ = "SATA"
-__version__ = "2023.5.24.0"
+__version__ = "2023.7.10.0"
