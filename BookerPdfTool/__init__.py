@@ -1,8 +1,8 @@
 #!/usr/bin/env python3.7
 # -*- coding: utf-8 -*-
 
-"""BookerWikiTool
-https://github.com/apachecn/BookerWikiTool"""
+"""BookerPdfTool
+https://github.com/apachecn/BookerPdfTool"""
 
 __author__ = "ApacheCN"
 __email__ = "apachecn@163.com"

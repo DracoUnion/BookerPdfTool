@@ -20,24 +20,13 @@ from EpubCrawler.img import process_img
 from EpubCrawler.util import safe_mkdir
 from . import __version__
 from .util import *
-from .epub_tool import *
-from .md_tool import *
-from .fmt import *
-from .fetch_links import *
 from .pdf_tool import *
 from .zip_tool import *
-from .flatten import *
 from .toggle_bw import *
-from .crawl_wx import *
-from .codelint import *
-from .chatgpt import *
-from .medium import *
-from .webarchive import *
-from .mdalign import *
     
 def main():
-    parser = argparse.ArgumentParser(prog="BookerWikiTool", description="iBooker WIKI tool", formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("-v", "--version", action="version", version=f"BookerWikiTool version: {__version__}")
+    parser = argparse.ArgumentParser(prog="BookerPdfTool", description="iBooker WIKI tool", formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("-v", "--version", action="version", version=f"BookerPdfTool version: {__version__}")
     parser.set_defaults(func=lambda x: parser.print_help())
     subparsers = parser.add_subparsers()
     
