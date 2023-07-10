@@ -6,7 +6,6 @@ import os
 import sys
 import shutil
 import json
-import yaml
 import traceback
 from functools import reduce
 from urllib.parse import quote_plus

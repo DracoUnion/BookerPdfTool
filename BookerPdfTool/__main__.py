@@ -2,22 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import argparse
-import requests
-from readability import Document
-import tempfile
-import uuid
-import subprocess as subp
-import re
-import os
-import json
-import yaml
-from urllib.parse import quote_plus
-from os import path
-from pyquery import PyQuery as pq
-from datetime import datetime
-from collections import OrderedDict
-from EpubCrawler.img import process_img
-from EpubCrawler.util import safe_mkdir
 from . import __version__
 from .util import *
 from .pdf_tool import *

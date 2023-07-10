@@ -1,14 +1,8 @@
 requests
 pyquery
-readability-lxml
-pyyaml
-EpubCrawler
 imgyaso
-# pywin32
 PyMuPdf
 img2pdf
-openpyxl
-pandas
-openai
-# pywinauto
 rarfile
+numpy
+opencv-python
