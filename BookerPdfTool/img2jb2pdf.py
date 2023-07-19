@@ -190,7 +190,7 @@ def img_to_jb2_pdf(fnames):
     imgs = [adathres_bts(img) for img in imgs]
     l = len(str(len(imgs))
     fnames = [
-        path.join(tmpdir, str(i).zfill(l) + '.png' 
+        path.join(tmpdir, str(i).zfill(l) + '.png')
         for i in range(len(imgs))
     ]
     for f, img in zip(fnames, imgs):
