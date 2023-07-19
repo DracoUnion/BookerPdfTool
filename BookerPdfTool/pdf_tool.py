@@ -9,10 +9,12 @@ import shutil
 import copy
 import tempfile
 import uuid
+import platform
 import traceback
 from PIL import Image, ImageFile
 from multiprocessing import Pool
 from imgyaso import pngquant_bts, adathres_bts
+import img2jb2pdf
 import img2pdf
 from io import BytesIO
 from .util import *
@@ -246,6 +248,10 @@ def get_scale_by_width(wid):
         return 0.5
 
 def pack_pdf(args):
+    if args.jb2 and platform.system() != 'Windows':
+        print('JBIG2 模式只支持 Windows')
+        return
+
     dir, rgx = args.dir, args.regex
     if dir.endswith('/') or \
         dir.endswith('\\'):
@@ -254,7 +260,10 @@ def pack_pdf(args):
     fnames = filter(is_pic, os.listdir(dir))
     if not rgx:
         fnames = [path.join(dir, f) for f in fnames]
-        pdf = img2pdf.convert(fnames)
+        if args.jb2:
+            pdf = img2jb2pdf.img_to_jb2_pdf(fnames)
+        else:
+            pdf = img2pdf.convert(fnames)
         fname = dir + '.pdf'
         print(fname)
         open(fname, 'wb').write(pdf)
@@ -270,7 +279,10 @@ def pack_pdf(args):
         
     for kw, fnames in d.items():
         fnames = [path.join(dir, f) for f in fnames]
-        pdf = img2pdf.convert(fnames)
+        if args.jb2:
+            pdf = img2jb2pdf.img_to_jb2_pdf(fnames)
+        else:
+            pdf = img2pdf.convert(fnames)
         fname = path.join(dir, kw + '.pdf')
         print(fname)
         open(fname, 'wb').write(pdf)

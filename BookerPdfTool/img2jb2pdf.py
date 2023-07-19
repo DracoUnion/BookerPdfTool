@@ -22,6 +22,7 @@ import re
 import struct
 import os
 from os import path
+from .util import *
 
 file = open
 # This is a very simple script to make a PDF file out of the output of a
@@ -184,7 +185,7 @@ def img_to_jb2_pdf(fnames):
     tmpdir = tempfile.gettempdir()
     pref = uuid.uuid4().hex
     subp.Popen(
-        ['jbig2enc', '-s', '-p', '-b', path.join(tmpdir, pref), *fnames],
+        [asset('jbig2enc'), '-s', '-p', '-b', path.join(tmpdir, pref), *fnames],
         shell=True,
     ).communicate()
     symtbl_fname = path.join(tmpdir, pref + '.sym')

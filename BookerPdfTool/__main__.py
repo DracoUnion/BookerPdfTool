@@ -44,6 +44,7 @@ def main():
     pack_pdf_parser = subparsers.add_parser("pack-pdf", help="package images into pdf")
     pack_pdf_parser.add_argument("dir", help="dir name")
     pack_pdf_parser.add_argument("-r", "--regex", help="regex of keyword for grouping")
+    pack_pdf_parser.add_argument("--jb2", action='store_true', help="rwhether to generate jb2 encoding pdf")
     pack_pdf_parser.set_defaults(func=pack_pdf)
 
 
