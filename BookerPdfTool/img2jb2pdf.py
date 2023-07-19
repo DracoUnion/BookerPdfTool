@@ -188,7 +188,7 @@ def img_to_jb2_pdf(fnames):
     pref = uuid.uuid4().hex
     imgs = [open(f, 'rb').read() for f in fnames]
     imgs = [adathres_bts(img) for img in imgs]
-    l = len(str(len(imgs))
+    l = len(str(len(imgs)))
     fnames = [
         path.join(tmpdir, str(i).zfill(l) + '.png')
         for i in range(len(imgs))
