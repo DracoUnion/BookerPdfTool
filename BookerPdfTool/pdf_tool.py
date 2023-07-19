@@ -14,7 +14,7 @@ import traceback
 from PIL import Image, ImageFile
 from multiprocessing import Pool
 from imgyaso import pngquant_bts, adathres_bts
-import img2jb2pdf
+from .img2jb2pdf import img_to_jb2_pdf
 import img2pdf
 from io import BytesIO
 from .util import *
@@ -261,7 +261,7 @@ def pack_pdf(args):
     if not rgx:
         fnames = [path.join(dir, f) for f in fnames]
         if args.jb2:
-            pdf = img2jb2pdf.img_to_jb2_pdf(fnames)
+            pdf = img_to_jb2_pdf(fnames)
         else:
             pdf = img2pdf.convert(fnames)
         fname = dir + '.pdf'
@@ -280,7 +280,7 @@ def pack_pdf(args):
     for kw, fnames in d.items():
         fnames = [path.join(dir, f) for f in fnames]
         if args.jb2:
-            pdf = img2jb2pdf.img_to_jb2_pdf(fnames)
+            pdf = img_to_jb2_pdf(fnames)
         else:
             pdf = img2pdf.convert(fnames)
         fname = path.join(dir, kw + '.pdf')
