@@ -441,6 +441,10 @@ def anime4k_auto_handle(args):
 
 # @safe()
 def pdf_auto_file(args):
+    if platform.system() != 'Windows':
+        print('JBIG2 模式只支持 Windows')
+        return
+
     fname = args.fname
     threads = args.threads
     if not fname.endswith('.pdf'):
@@ -454,8 +458,8 @@ def pdf_auto_file(args):
         ['pdf-tool', 'ext-pdf', '-d', tmpdir, fname],
         ['pdf-tool', 'tog-bw', '-t', str(threads), tmpdir],
         ['pdf-tool', 'anime4k-auto', '-t', str(threads), tmpdir],
-        ['imgyaso', '-m', 'thres', '-t', str(threads), tmpdir],
-        ['pdf-tool', 'pack-pdf', tmpdir],
+        # ['imgyaso', '-m', 'thres', '-t', str(threads), tmpdir],
+        ['pdf-tool', 'pack-pdf', tmpdir, '--jb2'],
     ]
     if args.gpu: cmds[2].append('-G')
     if args.whole: cmds[0].append('-w')
