@@ -22,6 +22,7 @@ import re
 import struct
 import os
 from os import path
+import shutil
 from imgyaso import adathres_bts
 from .util import *
 
@@ -186,24 +187,21 @@ def img_to_jb2_pdf(fnames):
     tmpdir = path.join(tempfile.gettempdir(), uuid.uuid4().hex)
     safe_mkdir(tmpdir)
     pref = uuid.uuid4().hex
-    '''
-    imgs = [open(f, 'rb').read() for f in fnames]
-    imgs = [adathres_bts(img) for img in imgs]
-    l = len(str(len(imgs)))
-    fnames = [
+    # 避免命令行过长
+    l = len(str(len(fnames)))
+    nfnames = [
         path.join(tmpdir, str(i).zfill(l) + '.png')
         for i in range(len(imgs))
     ]
-    for f, img in zip(fnames, imgs):
-        open(f, 'wb').write(img)
-    '''
+    for f, nf in zip(fnames, nfnames):
+        shutil.copy(f, nf)
     subp.Popen(
         [
             asset('jbig2enc'), 
             '-s', '-p', 
             '-T', '128',
             '-b', path.join(tmpdir, pref), 
-            *fnames
+            path.join(tmpdir, '*.png'),
         ], shell=True,
     ).communicate()
     symtbl_fname = path.join(tmpdir, pref + '.sym')
