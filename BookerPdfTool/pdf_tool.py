@@ -458,7 +458,7 @@ def pdf_auto_file(args):
         ['pdf-tool', 'ext', '-d', tmpdir, fname],
         ['pdf-tool', 'tog-bw', '-t', str(threads), tmpdir],
         ['pdf-tool', 'anime4k-auto', '-t', str(threads), tmpdir],
-        # ['imgyaso', '-m', 'thres', '-t', str(threads), tmpdir],
+        ['imgyaso', '-m', 'thres', '-t', str(threads), tmpdir],
         ['pdf-tool', 'pack', tmpdir, '--jb2'],
     ]
     if args.gpu: cmds[2].append('-G')

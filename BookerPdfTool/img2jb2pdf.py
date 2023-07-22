@@ -186,6 +186,7 @@ def img_to_jb2_pdf(fnames):
     tmpdir = path.join(tempfile.gettempdir(), uuid.uuid4().hex)
     safe_mkdir(tmpdir)
     pref = uuid.uuid4().hex
+    '''
     imgs = [open(f, 'rb').read() for f in fnames]
     imgs = [adathres_bts(img) for img in imgs]
     l = len(str(len(imgs)))
@@ -195,10 +196,15 @@ def img_to_jb2_pdf(fnames):
     ]
     for f, img in zip(fnames, imgs):
         open(f, 'wb').write(img)
-    
+    '''
     subp.Popen(
-        [asset('jbig2enc'), '-s', '-p', '-b', path.join(tmpdir, pref), *fnames],
-        shell=True,
+        [
+            asset('jbig2enc'), 
+            '-s', '-p', 
+            '-T', '128',
+            '-b', path.join(tmpdir, pref), 
+            *fnames
+        ], shell=True,
     ).communicate()
     symtbl_fname = path.join(tmpdir, pref + '.sym')
     symtbl = open(symtbl_fname, 'rb').read()
