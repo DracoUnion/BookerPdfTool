@@ -248,8 +248,8 @@ def get_scale_by_width(wid):
         return 0.5
 
 def pack_pdf(args):
-    if args.jb2 and platform.system() != 'Windows':
-        print('JBIG2 模式只支持 Windows')
+    if args.jb2 and platform.system() not in ['Windows', 'Linux']:
+        print('JBIG2 模式只支持 Windows 或 Linux')
         return
 
     dir, rgx = args.dir, args.regex
@@ -441,8 +441,8 @@ def anime4k_auto_handle(args):
 
 # @safe()
 def pdf_auto_file(args):
-    if platform.system() != 'Windows':
-        print('JBIG2 模式只支持 Windows')
+    if platform.system() not in ['Windows', 'Linux']:
+        print('JBIG2 模式只支持 Windows 或 Linux')
         return
 
     fname = args.fname
