@@ -191,7 +191,7 @@ def img_to_jb2_pdf(fnames):
     l = len(str(len(fnames)))
     nfnames = [
         path.join(tmpdir, str(i).zfill(l) + '.png')
-        for i in range(len(imgs))
+        for i in range(len(fnames))
     ]
     for f, nf in zip(fnames, nfnames):
         shutil.copy(f, nf)
