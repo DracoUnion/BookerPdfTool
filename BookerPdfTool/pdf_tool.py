@@ -455,11 +455,11 @@ def pdf_auto_file(args):
     safe_mkdir(tmpdir)
     
     cmds = [
-        ['pdf-tool', 'ext-pdf', '-d', tmpdir, fname],
+        ['pdf-tool', 'ext', '-d', tmpdir, fname],
         ['pdf-tool', 'tog-bw', '-t', str(threads), tmpdir],
         ['pdf-tool', 'anime4k-auto', '-t', str(threads), tmpdir],
         # ['imgyaso', '-m', 'thres', '-t', str(threads), tmpdir],
-        ['pdf-tool', 'pack-pdf', tmpdir, '--jb2'],
+        ['pdf-tool', 'pack', tmpdir, '--jb2'],
     ]
     if args.gpu: cmds[2].append('-G')
     if args.whole: cmds[0].append('-w')
