@@ -16,6 +16,7 @@ from multiprocessing import Pool
 from imgyaso import pngquant_bts, adathres_bts
 from .img2jb2pdf import img_to_jb2_pdf
 import img2pdf
+from img2jb2pdf import img2jb2pdf
 from io import BytesIO
 from .util import *
 
@@ -248,10 +249,6 @@ def get_scale_by_width(wid):
         return 0.5
 
 def pack_pdf(args):
-    if args.jb2 and platform.system() not in ['Windows', 'Linux']:
-        print('JBIG2 模式只支持 Windows 或 Linux')
-        return
-
     dir, rgx = args.dir, args.regex
     if dir.endswith('/') or \
         dir.endswith('\\'):
@@ -280,7 +277,7 @@ def pack_pdf(args):
     for kw, fnames in d.items():
         fnames = [path.join(dir, f) for f in fnames]
         if args.jb2:
-            pdf = img_to_jb2_pdf(fnames)
+            pdf = img2jb2pdf(fnames)
         else:
             pdf = img2pdf.convert(fnames)
         fname = path.join(dir, kw + '.pdf')
@@ -441,10 +438,6 @@ def anime4k_auto_handle(args):
 
 # @safe()
 def pdf_auto_file(args):
-    if platform.system() not in ['Windows', 'Linux']:
-        print('JBIG2 模式只支持 Windows 或 Linux')
-        return
-
     fname = args.fname
     threads = args.threads
     if not fname.endswith('.pdf'):
