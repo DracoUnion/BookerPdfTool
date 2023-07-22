@@ -195,15 +195,15 @@ def img_to_jb2_pdf(fnames):
     ]
     for f, nf in zip(fnames, nfnames):
         shutil.copy(f, nf)
-    subp.Popen(
-        [
-            asset('jbig2enc'), 
-            '-s', '-p', 
-            '-T', '128',
-            '-b', path.join(tmpdir, pref), 
-            path.join(tmpdir, '*.png'),
-        ], shell=True,
-    ).communicate()
+    cmd = [
+        asset('jbig2enc'), 
+        '-s', '-p', 
+        '-T', '128',
+        '-b', path.join(tmpdir, pref), 
+        path.join(tmpdir, '*.png'),
+    ]
+    print(f'cmd: {cmd}')
+    subp.Popen(cmd, shell=True).communicate()
     symtbl_fname = path.join(tmpdir, pref + '.sym')
     symtbl = open(symtbl_fname, 'rb').read()
     jb2_fnames = [

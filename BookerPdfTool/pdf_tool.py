@@ -464,6 +464,7 @@ def pdf_auto_file(args):
     if args.gpu: cmds[2].append('-G')
     if args.whole: cmds[0].append('-w')
     for cmd in cmds:
+        print(f'cmd: {cmd}')
         subp.Popen(cmd, shell=True).communicate()
     if path.isfile(fname + '.bak'): os.unlink(fname + '.bak')
     shutil.move(fname, fname + '.bak')
