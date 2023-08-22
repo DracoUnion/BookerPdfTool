@@ -24,7 +24,7 @@ def pdg2pic(args):
         '000': 5,
     }
     sort_key = lambda s: \
-        (prefs.get(s[:3], 999), int(s[3:]))
+        (prefs.get(s[:3], 999), int(s[3:-4]))
     fnames.sort(key=sort_key)
     if 'cov002.pdg' in fnames:
         idx = fnames.index('cov002.pdg')
