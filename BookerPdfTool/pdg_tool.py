@@ -11,7 +11,10 @@ def pdg2pic(args):
     odir = args.output_dir or dir
     safe_mkdir(odir)
     
-    fnames = filter(lambda s: s.endswith('.pdg'), os.listdir(dir))
+    fnames = list(filter(lambda s: s.endswith('.pdg'), os.listdir(dir)))
+    if len(fnames) == 0:
+        print('找不到任何 PDG 文件！')
+        return
     prefs = {
         'cov': 0,
         'bok': 1,
@@ -21,7 +24,7 @@ def pdg2pic(args):
         '000': 5,
     }
     sort_key = lambda s: \
-        (prefs.get(s[:3], 999), int(s[3:])
+        (prefs.get(s[:3], 999), int(s[3:]))
     fnames.sort(key=sort_key)
     if 'cov002.pdg' in fnames:
         idx = fnames.index('cov002.pdg')
