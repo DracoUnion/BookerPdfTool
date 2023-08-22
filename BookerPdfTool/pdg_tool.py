@@ -11,7 +11,7 @@ def pdg2pic(args):
     odir = args.output_dir or dir
     safe_mkdir(odir)
     
-    fnames = filter(lambda s: s.endswith('.pdg', os.listdir(dir))
+    fnames = filter(lambda s: s.endswith('.pdg'), os.listdir(dir))
     prefs = {
         'cov': 0,
         'bok': 1,
