@@ -5,6 +5,7 @@ import argparse
 from . import __version__
 from .util import *
 from .pdf_tool import *
+from .pdg_tool import *
 from .zip_tool import *
 from .toggle_bw import *
     
@@ -74,7 +75,11 @@ def main():
     pick_scan_parser.add_argument("-s", "--scanned-pg-rate", type=float, default=0.8, help="rate of scanned pages in whole doc, above which a pdf will be regarded as scanned")
     pick_scan_parser.add_argument("-t", "--threads", type=int, default=8, help="num of threads")
     pick_scan_parser.set_defaults(func=pick_scanned_pdf)
-
+    
+    pdg2pic_parser = subparsers.add_parser("pdg2pic", help="pdg2pic")
+    pdg2pic_parser.add_argument("dir", help="dirname of pdfs")
+    pdg2pic_parser.add_argument("-o", "--output-dir", help="output dir")
+    pdg2pic_parser.set_defaults(func=pdg2pic)
 
     args = parser.parse_args()
     args.func(args)
