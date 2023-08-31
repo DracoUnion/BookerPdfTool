@@ -14,7 +14,6 @@ import traceback
 from PIL import Image, ImageFile
 from multiprocessing import Pool
 from imgyaso import pngquant_bts, adathres_bts
-from img2jb2pdf import img_to_jb2_pdf
 import img2pdf
 from img2jb2pdf import img2jb2pdf
 from io import BytesIO
