@@ -257,7 +257,7 @@ def pack_pdf(args):
     if not rgx:
         fnames = [path.join(dir, f) for f in fnames]
         if args.jb2:
-            pdf = img_to_jb2_pdf(fnames)
+            pdf = img2jb2pdf(fnames)
         else:
             pdf = img2pdf.convert(fnames)
         fname = dir + '.pdf'
