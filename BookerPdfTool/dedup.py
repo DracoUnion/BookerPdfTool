@@ -9,7 +9,7 @@ from .util import *
 
 def md5_int(text):
      hash_ = hashlib.md5(text.encode('utf8')).hexdigest()
-     return int(hash_, 16)
+     return int(hash_[8:16], 16)
 
 def norm_l2(arr, axis=-1):
     l2 = (arr ** 2).sum(axis, keepdims=True) ** 0.5
