@@ -101,9 +101,11 @@ def dedup_handle(args):
     if not path.isfile(db_fname):
         np.save(db_fname, np.zeros([0, 1000]))
     his_vecs = np.load(db_fname)
-    assert isinstance(his_vecs, np.array) \ 
-           and his_vecs.ndim == 2 \
-           and his_vecs.shape[1] == 1000
+    assert (
+        isinstance(his_vecs, np.array)  
+        and his_vecs.ndim == 2 
+        and his_vecs.shape[1] == 1000
+    )
     # 去重
     his_vecs = dedup(fvec, his_vecs, args.thres)
     # 保存历史向量库
