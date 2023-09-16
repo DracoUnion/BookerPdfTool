@@ -79,7 +79,7 @@ def dedup_handle(args):
         fnames = [
             path.join(pdf_path, f) 
             for f in fnames 
-            path_if f.endswith('.pdf')
+            if f.endswith('.pdf')
         ]
     # 读取每个文件，转成哈希频率
     fvecs = [
