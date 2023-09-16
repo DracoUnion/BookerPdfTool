@@ -8,6 +8,7 @@ from .pdf_tool import *
 from .pdg_tool import *
 from .zip_tool import *
 from .toggle_bw import *
+from .dedup import *
     
 def main():
     parser = argparse.ArgumentParser(prog="BookerPdfTool", description="iBooker PDF tool", formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -80,6 +81,12 @@ def main():
     pdg2pic_parser.add_argument("dir", help="dirname of pdfs")
     pdg2pic_parser.add_argument("-o", "--output-dir", help="output dir")
     pdg2pic_parser.set_defaults(func=pdg2pic)
+
+    dedup_parser = subparsers.add_parser("dedup", help="deduplicate pdfs")
+    dedup_parser.add_argument("fname", help="file name or dirname of pdfs")
+    dedup_parser.add_argument("-t", "--thres", type=float, default=0.9, help="threshold for similarity")
+    dedup_parser.add_argument("--db", help="db file storing history vectors")
+    dedup_parser.set_defaults(func=dedup_handle)
 
     args = parser.parse_args()
     args.func(args)
