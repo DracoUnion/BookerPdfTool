@@ -7,13 +7,18 @@ import sys
 import shutil
 import json
 import traceback
+import fitz
 from functools import reduce
 from urllib.parse import quote_plus
+from PIL import ImageFile
 from os import path
 from pyquery import PyQuery as pq
 from datetime import datetime
 from collections import OrderedDict
 import imgyaso
+
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+fitz.Document.is_image = fitz.Document.xref_is_image
 
 RE_YAML_META = r'<!--yml([\s\S]+?)-->'
 RE_TITLE = r'^#+ (.+?)$'

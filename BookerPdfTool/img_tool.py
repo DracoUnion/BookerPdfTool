@@ -19,10 +19,6 @@ from img2jb2pdf import img2jb2pdf
 from io import BytesIO
 from .util import *
 
-ImageFile.LOAD_TRUNCATED_IMAGES = True
-fitz.Document.is_image = fitz.Document.xref_is_image
-
-
 def comp_pdf(args):
     fname = args.fname
     if not fname.endswith('.pdf'):
@@ -42,8 +38,6 @@ def comp_pdf(args):
             p.replace_image(xref, stream=data)
     doc.save(fname, clean=True, garbage=4, deflate=True, linear=True)
     doc.close()
-
-
 
 def ext_pdf(args):
     if path.isdir(args.fname):
@@ -148,72 +142,6 @@ def pack_pdf(args):
         fname = path.join(dir, kw + '.pdf')
         print(fname)
         open(fname, 'wb').write(pdf)
-
-
-# @safe()
-def waifu2x_auto_file(args):
-    fname = args.fname
-    if not is_pic(fname):
-        print('请提供图像')
-        return
-    print(fname)
-    try: img = Image.open(fname)
-    except: 
-        print('文件无法打开')
-        return
-    width = min(img.size[0], img.size[1])
-    scale = get_scale_by_width(width)
-    img.close()
-    p = find_cmd_path('waifu2x-converter-cpp')
-    cmd = [
-        'waifu2x-converter-cpp', 
-        '-m', 'noise-scale',
-        '--noise-level', '2',
-        '--scale-ratio', str(scale),
-        '--block-size', '256',
-        '-i', fname,
-        '-o', fname,
-        '--model-dir', path.join(p, 'models_rgb'),
-        '--disable-gpu',
-    ]
-    print(f'cmd: {cmd}')
-    r = subp.Popen(
-        cmd, 
-        shell=True,
-        stdout=subp.PIPE,
-        stderr=subp.PIPE,
-    ).communicate()
-    open(fname, 'ab').close() # touch
-    print(r[0].decode('utf8', 'ignore') or 
-        r[1].decode('utf8', 'ignore'))
-
-def waifu2x_auto_dir(args):
-    dir = args.fname
-    fnames = os.listdir(dir)
-    pool = Pool(args.threads)
-    for f in fnames:
-        ff = path.join(dir, f)
-        args = copy.deepcopy(args)
-        args.fname = ff
-        pool.apply_async(waifu2x_auto_file, [args])
-    pool.close()
-    pool.join()
-    
-def waifu2x_auto_handle(args):
-    # 检查 waifu2x
-    if not find_cmd_path('waifu2x-converter-cpp'): 
-        print('waifu2x-converter-cpp 未找到，请下载并将其目录添加到系统变量 PATH 中')
-        return
-    if path.isdir(args.fname):
-        waifu2x_auto_dir(args)
-    else:
-        waifu2x_auto_file(args)
-        
-def office2pdf_handle(args):
-    if path.isdir(args.fname):
-        office2pdf_dir(args)
-    else:
-        office2pdf_file(args)
 
 # @safe()
 def anime4k_auto_file(args):

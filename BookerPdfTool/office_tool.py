@@ -60,3 +60,9 @@ def office2pdf_dir(args):
         args.fname = ff
         try: office2pdf_file(args)
         except Exception as ex: traceback.print_exc()
+        
+def office2pdf_handle(args):
+    if path.isdir(args.fname):
+        office2pdf_dir(args)
+    else:
+        office2pdf_file(args)

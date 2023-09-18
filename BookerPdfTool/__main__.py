@@ -4,7 +4,7 @@
 import argparse
 from . import __version__
 from .util import *
-from .pdf_tool import *
+from .img_tool import *
 from .pdg_tool import *
 from .zip_tool import *
 from .html_tool import *
@@ -39,7 +39,7 @@ def main():
     pdf2html_parser.add_argument("-d", "--dir", default='.', help="path to save")
     pdf2html_parser.set_defaults(func=pdf2html)
 
-    anime4k_auto_parser = subparsers.add_parser("anime4k-auto", help="process imgs with waifu2x")
+    anime4k_auto_parser = subparsers.add_parser("anime4k-auto", help="process imgs with anime4k")
     anime4k_auto_parser.add_argument("fname", help="file or dir name")
     anime4k_auto_parser.add_argument("-G", "--gpu", action='store_true', help="whether to use GPU")
     anime4k_auto_parser.add_argument("-t", "--threads", help="num of threads", type=int, default=8)
