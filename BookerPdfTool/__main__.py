@@ -8,6 +8,7 @@ from .pdf_tool import *
 from .pdg_tool import *
 from .zip_tool import *
 from .toggle_bw import *
+from .office_tool import *
 from .dedup import *
     
 def main():
