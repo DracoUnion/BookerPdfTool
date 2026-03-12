@@ -173,7 +173,7 @@ def anime4k_auto_file(args):
         shell=True,
         stdout=subp.PIPE,
         stderr=subp.PIPE,
-        cwd=find_cmd_path('Anime4KCPP_CLI'),
+        cwd=shutil.which('Anime4KCPP_CLI'),
     ).communicate()
     open(fname, 'ab').close() # touch
     print(r[0].decode('utf8', 'ignore') or 
@@ -189,7 +189,7 @@ def anime4k_auto_dir(args):
 
 def anime4k_auto_handle(args):
     # 检查 waifu2x
-    if not find_cmd_path('Anime4KCPP_CLI'): 
+    if not shutil.which('Anime4KCPP_CLI'): 
         print('Anime4KCPP_CLI 未找到，请下载并将其目录添加到系统变量 PATH 中')
         return
     if path.isdir(args.fname):

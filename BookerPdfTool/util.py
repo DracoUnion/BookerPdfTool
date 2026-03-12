@@ -127,18 +127,6 @@ def is_pic(fname):
     m = re.search(r'\.(\w+)$', fname)
     return bool(m and m.group(1) in ext)
 
-def find_cmd_path(name):
-    delim = ';' if sys.platform == 'win32' else ':'
-    suff = (
-        ['.exe', '.cmd', '.ps1']
-        if sys.platform == 'win32'
-        else ['', '.sh']
-    ) 
-    for p in os.environ.get('PATH', '').split(delim):
-        if any(path.isfile(path.join(p, name + s)) for s in suff):
-            return p
-    return ''
-    
 def is_video(fname):
     ext = [
         'mp4', 'm4v', '3gp', 'mpg', 'flv', 'f4v', 
