@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(: \"\n验证 pyproject.toml 语法\n\")",
+      "Bash(python -c \"import tomllib; f = open\\(''pyproject.toml'', ''rb''\\); tomllib.load\\(f\\); f.close\\(\\); print\\(''pyproject.toml 格式正确''\\)\")",
+      "Bash(python -c \"import sys; sys.exit\\(0 if __import__\\(''os''\\).path.exists\\(''pyproject.toml''\\) else 1\\)\")",
+      "Bash(: \":*)",
+      "Bash(python -c \":*)"
+    ]
+  }
+}
