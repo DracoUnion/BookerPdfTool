@@ -173,7 +173,7 @@ def anime4k_auto_file(args):
         shell=True,
         stdout=subp.PIPE,
         stderr=subp.PIPE,
-        cwd=shutil.which('Anime4KCPP_CLI'),
+        cwd=path.dirname(shutil.which('Anime4KCPP_CLI')),
     ).communicate()
     open(fname, 'ab').close() # touch
     print(r[0].decode('utf8', 'ignore') or 
