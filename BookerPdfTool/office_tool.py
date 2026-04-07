@@ -59,6 +59,8 @@ def office2pdf_dir(args):
         ff = path.join(dir, f)
         args.fname = ff
         try: office2pdf_file(args)
+        except KeyboardInterrupt:
+            raise
         except Exception as ex: traceback.print_exc()
         
 def office2pdf_handle(args):

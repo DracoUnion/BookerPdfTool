@@ -52,6 +52,8 @@ def ext_pdf_dir(args):
             ffname = path.join(dir, fname)
             args.fname = ffname
             ext_pdf_file(args)
+        except KeyboardInterrupt:
+            raise
         except: traceback.print_exc()
 
 def ext_pdf_file(args):

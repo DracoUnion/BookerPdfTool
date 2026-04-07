@@ -152,6 +152,8 @@ def safe(default=None):
         def inner(*args, **kw):
             print(123123)
             try: return f(*args, **kw)
+            except KeyboardInterrupt:
+                raise
             except: 
                 traceback.print_exc()
                 return default

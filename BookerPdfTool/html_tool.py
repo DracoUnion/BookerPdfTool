@@ -138,6 +138,8 @@ def pdf2html_dir(args):
             ffname = path.join(dir, fname)
             args.fname = ffname
             pdf2html_file(args)
+        except KeyboardInterrupt:
+            raise
         except: traceback.print_exc()
 
 def pdf2html(args):
