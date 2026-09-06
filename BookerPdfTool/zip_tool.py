@@ -60,6 +60,13 @@ def crack_zip(args):
     # pool.close()
     # pool.join()
     z.close()
+
+def reg_subparser(subparsers):
+    parser = subparsers.add_parser("crack-zip", help="crack encrypted zip")
+    parser.add_argument("fname", help="ZIP fname")
+    parser.add_argument("-p", "--pw", default=asset('PwdDic.txt'), help="password dict")
+    parser.add_argument("-t", "--threads", type=int, default=8, help="num of threads")
+    parser.set_defaults(func=crack_zip)
         
         
     

@@ -147,3 +147,9 @@ def pdf2html(args):
         pdf2html_dir(args)
     else:
         pdf2html_file(args)
+
+def reg_subparser(subparsers):
+    parser = subparsers.add_parser("2html", help="convert pdf page to html")
+    parser.add_argument("fname", help="file name")
+    parser.add_argument("-d", "--dir", default='.', help="path to save")
+    parser.set_defaults(func=pdf2html)

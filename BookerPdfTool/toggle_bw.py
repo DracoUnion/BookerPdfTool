@@ -13,6 +13,13 @@ def toggle_bw_handle(args):
     else:
         toggle_bw_file(args)
 
+def reg_subparser(subparsers):
+    parser = subparsers.add_parser("tog-bw", help="check if image colors reversed and then toggle them")
+    parser.add_argument("fname", help="file or dir name")
+    parser.add_argument("-t", "--threads", type=int, default=8, help="num of thread")
+    parser.add_argument("-s", "--thres", type=int, default=50, help="threshold less than which the color will be regarded as black")
+    parser.set_defaults(func=toggle_bw_handle)
+
 def toggle_bw_dir(args):
     dir = args.fname
     fnames = os.listdir(dir)

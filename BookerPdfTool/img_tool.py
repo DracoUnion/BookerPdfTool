@@ -291,13 +291,50 @@ def pick_scanned_pdf(args):
             continue
         ff = path.join(dir, f)
         pool.apply_async(
-            tr_pick_scanned_pdf, 
+            tr_pick_scanned_pdf,
             [
-                ff, [odir0, odir1], 
-                args.imgs_area_rate, 
+                ff, [odir0, odir1],
+                args.imgs_area_rate,
                 args.scanned_pg_rate
             ]
         )
     pool.close()
     pool.join()
+
+def reg_subparser(subparsers):
+    parser = subparsers.add_parser("comp", help="compress pdf")
+    parser.add_argument("fname", help="file name")
+    parser.set_defaults(func=comp_pdf)
+
+    parser = subparsers.add_parser("ext", help="extract odf into images")
+    parser.add_argument("fname", help="file name")
+    parser.add_argument("-d", "--dir", default='.', help="path to save")
+    parser.add_argument("-w", "--whole", action='store_true', default=False, help="whether to clip the whole page")
+    parser.set_defaults(func=ext_pdf)
+
+    parser = subparsers.add_parser("anime4k-auto", help="process imgs with anime4k")
+    parser.add_argument("fname", help="file or dir name")
+    parser.add_argument("-G", "--gpu", action='store_true', help="whether to use GPU")
+    parser.add_argument("-t", "--threads", help="num of threads", type=int, default=8)
+    parser.set_defaults(func=anime4k_auto_handle)
+
+    parser = subparsers.add_parser("pack", help="package images into pdf")
+    parser.add_argument("dir", help="dir name")
+    parser.add_argument("-r", "--regex", help="regex of keyword for grouping")
+    parser.add_argument("--jb2", action='store_true', help="rwhether to generate jb2 encoding pdf")
+    parser.set_defaults(func=pack_pdf)
+
+    parser = subparsers.add_parser("auto", help="auto process pdf")
+    parser.add_argument("fname", help="pdf fname or dirname")
+    parser.add_argument("-t", "--threads", type=int, default=8, help="num of threads")
+    parser.add_argument("-G", "--gpu", action='store_true', help="whether to use GPU")
+    parser.add_argument("-w", "--whole", action='store_true', default=False, help="whether to clip the whole page")
+    parser.set_defaults(func=pdf_auto_handle)
+
+    parser = subparsers.add_parser("pick-scan", help="pick scanned pdf")
+    parser.add_argument("dir", help="dirname of pdfs")
+    parser.add_argument("-i", "--imgs-area-rate", type=float, default=0.8, help="rate of imgs area in page area, above which a page will be regarded as scanned")
+    parser.add_argument("-s", "--scanned-pg-rate", type=float, default=0.8, help="rate of scanned pages in whole doc, above which a pdf will be regarded as scanned")
+    parser.add_argument("-t", "--threads", type=int, default=8, help="num of threads")
+    parser.set_defaults(func=pick_scanned_pdf)
         

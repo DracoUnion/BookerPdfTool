@@ -37,3 +37,9 @@ def pdg2pic(args):
         print(f)
         img_fname = path.join(odir, str(i).zfill(npad) + '.png')
         shutil.copy(f, img_fname)
+
+def reg_subparser(subparsers):
+    parser = subparsers.add_parser("pdg2pic", help="pdg2pic")
+    parser.add_argument("dir", help="dirname of pdfs")
+    parser.add_argument("-o", "--output-dir", help="output dir")
+    parser.set_defaults(func=pdg2pic)

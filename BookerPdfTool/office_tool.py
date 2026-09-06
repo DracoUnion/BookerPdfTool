@@ -68,3 +68,8 @@ def office2pdf_handle(args):
         office2pdf_dir(args)
     else:
         office2pdf_file(args)
+
+def reg_subparser(subparsers):
+    parser = subparsers.add_parser("fm-office", help="doc/xls/ppt to pdf")
+    parser.add_argument("fname", help="file name")
+    parser.set_defaults(func=office2pdf_handle)

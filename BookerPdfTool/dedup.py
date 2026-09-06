@@ -118,4 +118,11 @@ def dedup_handle(args):
     his_vecs = dedup(fvecs, his_vecs, args.thres)
     # 保存历史向量库
     np.save(db_fname, his_vecs)
+
+def reg_subparser(subparsers):
+    parser = subparsers.add_parser("dedup", help="deduplicate pdfs")
+    parser.add_argument("fname", help="file name or dirname of pdfs")
+    parser.add_argument("-t", "--thres", type=float, default=0.9, help="threshold for similarity")
+    parser.add_argument("--db", help="db file storing history vectors")
+    parser.set_defaults(func=dedup_handle)
     
