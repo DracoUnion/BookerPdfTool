@@ -48,7 +48,7 @@ dependencies = [
     "rarfile",
     "numpy",
     "opencv-python",
-    "img2jb2pdf",
+    "pyjbig2enc",
 ]
 
 [project.urls]
