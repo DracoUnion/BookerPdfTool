@@ -15,7 +15,7 @@ from PIL import Image, ImageFile
 from multiprocessing import Pool
 from imgyaso import pngquant_bts, adathres_bts
 import img2pdf
-from img2jb2pdf import img2jb2pdf
+from pyjbig2enc.api import img2jb2pdf
 from io import BytesIO
 from .util import *
 
