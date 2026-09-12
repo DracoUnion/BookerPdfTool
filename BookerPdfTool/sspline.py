@@ -251,9 +251,8 @@ def clipped_copy(src: np.ndarray, dst: np.ndarray, src_x: int, src_y: int,
     target[dy:dy + height, dx:dx + width] = source[sy:sy + height, sx:sx + width]
 
 
-def resize_file(
-    input_path: str | Path, output_path: str | Path,
-    width: int, height: int, multiple: float,
+def sspline_resize_hdl(
+    args
 ) -> None:
     """加载一张图片，经本模块的 NumPy 实现缩放后，再保存到目标路径。
 
@@ -272,29 +271,24 @@ def resize_file(
         RuntimeError: Pillow 未安装。提示：python -m pip install Pillow。
     """
 
-    # 有 alpha 通道就按 RGBA 处理，否则按 RGB，避免丢失透明信息。
-    img = open(input_path, 'rb').read()
-    if width and height:
-        result = resize_rgb(img, width, height)
-    elif multiple:
-        result = scale_rgb(img, multiple)
+    # 有 alpha 通道就按 RGBA 处理，否则按 RGB，避免丢失透明信息
+    # 。
+    img = open(args.input_path, 'rb').read()
+    if args.width and args.height:
+        result = resize_rgb(img, args.width, args.height)
+    elif args.multiple:
+        result = scale_rgb(img, args.multiple)
     else:
         raise ValueError('width & height or multiple must be set')
-    open(output_path, 'wb').write(result)
+    open(args.output_path, 'wb').write(result)
 
 
-def main() -> None:
+def reg_subparser(subparsers) -> None:
     """命令行入口：python sspline_rewrite.py <输入> <输出> <宽> <高>。"""
-    parser = argparse.ArgumentParser(
-        description="NumPy S-Spline-style image resampler")
+    parser = subparsers.add_parser("sspline", help="sspline")
     parser.add_argument("input", help="input image")
-    parser.add_argument("output", help="output image")
+    parser.add_argument("-o", "--output", help="output image")
     parser.add_argument("-iw", "--width", type=int, default=0, help="destination width in pixels")
     parser.add_argument("-ih", "--height", type=int, default=0, help="destination height in pixels")
     parser.add_argument("-x", "--multiple", type=float, default=2, help="destination multiple")
-    args = parser.parse_args()
-    resize_file(args.input, args.output, args.width, args.height, args.multiple)
-
-
-if __name__ == "__main__":
-    main()
+    parser.set_default(func=sspline_resize_hdl)
