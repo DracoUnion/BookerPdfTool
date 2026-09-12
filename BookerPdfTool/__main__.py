@@ -3,7 +3,7 @@
 
 import argparse
 from . import __version__
-from . import office_tool, img_tool, html_tool, toggle_bw, zip_tool, pdg_tool, dedup
+from . import office_tool, img_tool, html_tool, toggle_bw, zip_tool, pdg_tool, dedup, sspline
 
 def main():
     parser = argparse.ArgumentParser(prog="BookerPdfTool", description="iBooker PDF tool", formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -18,6 +18,7 @@ def main():
     zip_tool.reg_subparser(subparsers)
     pdg_tool.reg_subparser(subparsers)
     dedup.reg_subparser(subparsers)
+    sspline.reg_subparser(subparsers)
 
     args = parser.parse_args()
     args.func(args)
