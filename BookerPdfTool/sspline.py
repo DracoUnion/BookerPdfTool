@@ -292,4 +292,4 @@ def reg_subparser(subparsers) -> None:
     parser.add_argument("-iw", "--width", type=int, default=0, help="destination width in pixels")
     parser.add_argument("-ih", "--height", type=int, default=0, help="destination height in pixels")
     parser.add_argument("-x", "--multiple", type=float, default=2, help="destination multiple")
-    parser.set_default(func=sspline_resize_hdl)
+    parser.set_defaults(func=sspline_resize_hdl)
