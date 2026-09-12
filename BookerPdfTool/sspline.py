@@ -272,15 +272,16 @@ def sspline_resize_hdl(
     """
 
     # 有 alpha 通道就按 RGBA 处理，否则按 RGB，避免丢失透明信息
-    # 。
-    img = open(args.input_path, 'rb').read()
+    if not args.output:
+        args.output = args.input
+    img = open(args.input, 'rb').read()
     if args.width and args.height:
         result = resize_rgb(img, args.width, args.height)
     elif args.multiple:
         result = scale_rgb(img, args.multiple)
     else:
         raise ValueError('width & height or multiple must be set')
-    open(args.output_path, 'wb').write(result)
+    open(args.output, 'wb').write(result)
 
 
 def reg_subparser(subparsers) -> None:
