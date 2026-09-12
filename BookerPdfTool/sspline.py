@@ -24,11 +24,7 @@ from pathlib import Path
 from io import BytesIO
 
 import numpy as np
-
-try:
-    from PIL import Image
-except ImportError:  # Pillow 只在 resize_file() 中需要；缺失时退化为 None 以便延迟报错
-    Image = None
+from PIL import Image
 
 
 def _mirror_indices(indices: np.ndarray, length: int) -> np.ndarray:
@@ -125,7 +121,7 @@ def _axis_weights(destination_size: int, source_size: int,
     weights /= np.maximum(weights.sum(axis=1, keepdims=True), np.finfo(np.float64).eps)
     return coordinates, weights
 
-def rescale_rgb(pixels: np.ndarray | bytes, multiple: float):
+def scale_rgb(pixels: np.ndarray | bytes, multiple: float):
     if isinstance(pixels, bytes):
         w, h = Image.open(BytesIO(pixels)).size
     else :
@@ -255,8 +251,10 @@ def clipped_copy(src: np.ndarray, dst: np.ndarray, src_x: int, src_y: int,
     target[dy:dy + height, dx:dx + width] = source[sy:sy + height, sx:sx + width]
 
 
-def resize_file(input_path: str | Path, output_path: str | Path,
-                width: int, height: int) -> None:
+def resize_file(
+    input_path: str | Path, output_path: str | Path,
+    width: int, height: int, multiple: float,
+) -> None:
     """加载一张图片，经本模块的 NumPy 实现缩放后，再保存到目标路径。
 
     这是 resize_rgb 的文件级便捷封装，供命令行入口使用：
@@ -273,14 +271,16 @@ def resize_file(input_path: str | Path, output_path: str | Path,
     异常：
         RuntimeError: Pillow 未安装。提示：python -m pip install Pillow。
     """
-    if Image is None:
-        raise RuntimeError("Pillow is required: python -m pip install Pillow")
+
     # 有 alpha 通道就按 RGBA 处理，否则按 RGB，避免丢失透明信息。
-    with Image.open(input_path) as image:
-        mode = "RGBA" if "A" in image.getbands() else "RGB"
-        source = np.asarray(image.convert(mode))
-    result = resize_rgb(source, width, height)
-    Image.fromarray(result, mode=mode).save(output_path)
+    img = open(input_path, 'rb').read()
+    if width and height:
+        result = resize_rgb(img, width, height)
+    elif multiple:
+        result = scale_rgb(img, multiple)
+    else:
+        raise ValueError('width & height or multiple must be set')
+    open(output_path, 'wb').write(result)
 
 
 def main() -> None:
@@ -289,10 +289,11 @@ def main() -> None:
         description="NumPy S-Spline-style image resampler")
     parser.add_argument("input", help="input image")
     parser.add_argument("output", help="output image")
-    parser.add_argument("width", type=int, help="destination width in pixels")
-    parser.add_argument("height", type=int, help="destination height in pixels")
+    parser.add_argument("-iw", "--width", type=int, default=0, help="destination width in pixels")
+    parser.add_argument("-ih", "--height", type=int, default=0, help="destination height in pixels")
+    parser.add_argument("-x", "--multiple", type=float, default=2, help="destination multiple")
     args = parser.parse_args()
-    resize_file(args.input, args.output, args.width, args.height)
+    resize_file(args.input, args.output, args.width, args.height, args.multiple)
 
 
 if __name__ == "__main__":
