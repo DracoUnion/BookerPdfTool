@@ -5,5 +5,6 @@ PyMuPdf
 img2pdf
 rarfile
 numpy
+pillow
 opencv-python
 pyjbig2enc
