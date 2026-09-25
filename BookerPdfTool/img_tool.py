@@ -1,8 +1,10 @@
+import copy
 import fitz
 import subprocess as subp
 import sys
 from os import path
 from pyquery import PyQuery as pq
+from concurrent.futures import ThreadPoolExecutor
 import re
 import os
 import shutil
@@ -18,6 +20,7 @@ import img2pdf
 from pyjbig2enc.api import img2jb2pdf
 from io import BytesIO
 from .util import *
+from .sspline import scale_rgb
 
 def comp_pdf(args):
     fname = args.fname
@@ -146,7 +149,7 @@ def pack_pdf(args):
         open(fname, 'wb').write(pdf)
 
 # @safe()
-def anime4k_auto_file(args):
+def auto_scale_file(args):
     fname = args.fname
     if not is_pic(fname):
         print('请提供图像')
@@ -159,45 +162,36 @@ def anime4k_auto_file(args):
     width = min(img.size[0], img.size[1])
     scale = get_scale_by_width(width)
     img.close()
-    cmd = [
-        'Anime4KCPP_CLI', 
-        '-t', str(args.threads),
-        '-z', str(scale),
-        '-i', fname,
-        '-o', fname,
-        "-w", "-H",
-        "-L", "3",
-    ]
-    if args.gpu: cmd.append('-q')
-    print(f'cmd: {cmd}')
-    r = subp.Popen(
-        cmd, 
-        shell=True,
-        stdout=subp.PIPE,
-        stderr=subp.PIPE,
-        cwd=path.dirname(shutil.which('Anime4KCPP_CLI')),
-    ).communicate()
-    open(fname, 'ab').close() # touch
-    print(r[0].decode('utf8', 'ignore') or 
-        r[1].decode('utf8', 'ignore'))
+    img = scale_rgb(
+        open(fname, 'rb').read(),
+        scale,
+    )
+    open(fname, 'wb').write(img)
         
-def anime4k_auto_dir(args):
+def auto_scale_dir(args):
     dir = args.fname
     fnames = os.listdir(dir)
+    pool = ThreadPoolExecutor(args.threads)
+    hdls = []
     for f in fnames:
-        ff = path.join(dir, f)
-        args.fname = ff
-        anime4k_auto_file(args)
+        args = copy.deepcopy(args)
+        args.fname = path.join(dir, f)
+        h = pool.submit(
+            auto_scale_file, args
+        )
+        hdls.append(h)
+    for h in hdls:
+        h.result()
 
-def anime4k_auto_handle(args):
+def auto_scale_handle(args):
     # 检查 waifu2x
     if not shutil.which('Anime4KCPP_CLI'): 
         print('Anime4KCPP_CLI 未找到，请下载并将其目录添加到系统变量 PATH 中')
         return
     if path.isdir(args.fname):
-        anime4k_auto_dir(args)
+        auto_scale_dir(args)
     else:
-        anime4k_auto_file(args)
+        auto_scale_file(args)
 
 # @safe()
 def pdf_auto_file(args):
@@ -312,11 +306,10 @@ def reg_subparser(subparsers):
     parser.add_argument("-w", "--whole", action='store_true', default=False, help="whether to clip the whole page")
     parser.set_defaults(func=ext_pdf)
 
-    parser = subparsers.add_parser("anime4k-auto", help="process imgs with anime4k")
+    parser = subparsers.add_parser("auto-scale", help="auto-scale img with sspline")
     parser.add_argument("fname", help="file or dir name")
-    parser.add_argument("-G", "--gpu", action='store_true', help="whether to use GPU")
     parser.add_argument("-t", "--threads", help="num of threads", type=int, default=8)
-    parser.set_defaults(func=anime4k_auto_handle)
+    parser.set_defaults(func=auto_scale_handle)
 
     parser = subparsers.add_parser("pack", help="package images into pdf")
     parser.add_argument("dir", help="dir name")
