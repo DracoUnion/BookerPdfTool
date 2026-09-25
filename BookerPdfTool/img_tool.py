@@ -203,11 +203,10 @@ def pdf_auto_file(args):
     cmds = [
         ['pdf-tool', 'ext', '-d', tmpdir, fname],
         ['pdf-tool', 'tog-bw', '-t', str(threads), tmpdir],
-        ['pdf-tool', 'anime4k-auto', '-t', str(threads), tmpdir],
+        ['pdf-tool', 'auto-scale', '-t', str(threads), tmpdir],
         ['imgyaso', '-m', 'thres', '-t', str(threads), tmpdir],
         ['pdf-tool', 'pack', tmpdir, '--jb2'],
     ]
-    if args.gpu: cmds[2].append('-G')
     if args.whole: cmds[0].append('-w')
     for cmd in cmds:
         print(f'cmd: {cmd}')
@@ -232,64 +231,6 @@ def pdf_auto_handle(args):
         pdf_auto_dir(args)
     else:
         pdf_auto_file(args)
-
-def pg_all_imgs_area(pg):
-    rects = [
-        pg.get_image_rects(info[0])
-        for info in pg.get_images()
-    ]
-    rects = [r[0] for r in rects if r]
-    return sum([(r[2] - r[0]) * (r[3] - r[1]) for r in rects])
-
-def pg_area(pg):
-    return (pg.rect[2] - pg.rect[0]) * (pg.rect[3] - pg.rect[1])
-
-def is_scanned_pdf(fname, imgs_area_rate=0.8, scanned_pg_rate=0.8):
-    doc = fitz.open("pdf", open(fname, 'rb').read())
-    rate = sum([
-        pg_all_imgs_area(pg) >= pg_area(pg) * imgs_area_rate
-        for pg in doc
-    ]) / len(doc)
-    return rate >= scanned_pg_rate
-    
-# @safe()
-def tr_pick_scanned_pdf(fname, odirs, imgs_area_rate, scanned_pg_rate):
-    scanned = is_scanned_pdf(
-        fname, 
-        imgs_area_rate=imgs_area_rate, 
-        scanned_pg_rate=scanned_pg_rate,
-    )
-    rtext = '扫描版' if scanned else '文字版'
-    print(f'{fname}：{rtext}')
-    if scanned:
-        shutil.move(fname, path.join(odirs[0], path.basename(fname)))
-    else:
-        shutil.move(fname, path.join(odirs[1], path.basename(fname)))
-    
-def pick_scanned_pdf(args):
-    dir = args.dir
-    if not path.isdir(dir):
-        print('请提供目录')
-        return
-    odir0 = path.join(dir, '扫描版')
-    odir1 = path.join(dir, '文字版')
-    safe_mkdir(odir0)
-    safe_mkdir(odir1)
-    pool = Pool(args.threads)
-    for f in os.listdir(dir):
-        if not f.endswith('.pdf'):
-            continue
-        ff = path.join(dir, f)
-        pool.apply_async(
-            tr_pick_scanned_pdf,
-            [
-                ff, [odir0, odir1],
-                args.imgs_area_rate,
-                args.scanned_pg_rate
-            ]
-        )
-    pool.close()
-    pool.join()
 
 def reg_subparser(subparsers):
     parser = subparsers.add_parser("comp", help="compress pdf")
@@ -319,11 +260,4 @@ def reg_subparser(subparsers):
     parser.add_argument("-G", "--gpu", action='store_true', help="whether to use GPU")
     parser.add_argument("-w", "--whole", action='store_true', default=False, help="whether to clip the whole page")
     parser.set_defaults(func=pdf_auto_handle)
-
-    parser = subparsers.add_parser("pick-scan", help="pick scanned pdf")
-    parser.add_argument("dir", help="dirname of pdfs")
-    parser.add_argument("-i", "--imgs-area-rate", type=float, default=0.8, help="rate of imgs area in page area, above which a page will be regarded as scanned")
-    parser.add_argument("-s", "--scanned-pg-rate", type=float, default=0.8, help="rate of scanned pages in whole doc, above which a pdf will be regarded as scanned")
-    parser.add_argument("-t", "--threads", type=int, default=8, help="num of threads")
-    parser.set_defaults(func=pick_scanned_pdf)
         
