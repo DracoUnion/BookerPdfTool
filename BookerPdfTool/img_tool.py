@@ -184,10 +184,6 @@ def auto_scale_dir(args):
         h.result()
 
 def auto_scale_handle(args):
-    # 检查 waifu2x
-    if not shutil.which('Anime4KCPP_CLI'): 
-        print('Anime4KCPP_CLI 未找到，请下载并将其目录添加到系统变量 PATH 中')
-        return
     if path.isdir(args.fname):
         auto_scale_dir(args)
     else:
