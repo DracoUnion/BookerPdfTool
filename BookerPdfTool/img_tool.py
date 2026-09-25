@@ -148,6 +148,14 @@ def pack_pdf(args):
         print(fname)
         open(fname, 'wb').write(pdf)
 
+def auto_scale_file_safe(args):
+    try:
+        auto_scale_file(args)
+    except KeyboardInterrupt:
+        raise
+    except Exception:
+        traceback.print_exc()
+
 # @safe()
 def auto_scale_file(args):
     fname = args.fname
@@ -177,7 +185,7 @@ def auto_scale_dir(args):
         args = copy.deepcopy(args)
         args.fname = path.join(dir, f)
         h = pool.submit(
-            auto_scale_file, args
+            auto_scale_file_safe, args
         )
         hdls.append(h)
     for h in hdls:
