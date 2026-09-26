@@ -2,7 +2,7 @@
 
 iBooker/DracoUnion 知识库 PDF 处理工具
 
-一套面向电子书 / 扫描版 PDF 的命令行工具，提供压缩、抽取图片、转 HTML、黑白反转纠正、AI 超分增强、打包成 PDF、扫描版甄别、PDF 去重、加密压缩包破解、PDG 转图片、Office 转 PDF 等能力。
+一套面向电子书 / 扫描版 PDF 的命令行工具，提供压缩、抽取图片、转 HTML、黑白反转纠正、S-Spline 缩放增强、打包成 PDF、PDF 去重、加密压缩包破解、PDG 转图片、Office 转 PDF 等能力。
 
 ## 安装
 
@@ -24,7 +24,7 @@ Python 版本要求：>= 3.6。
 
 ### 可选依赖
 
-+   `anime4k-auto` / `auto` 命令需要 [Anime4KCPP_CLI](https://github.com/TianZerL/Anime4KCPP)，并将其所在目录加入系统 PATH。
++   `auto` 命令自动处理时会调用外部的 `imgyaso` 二值化工具（需将其加入系统 PATH）。
 +   `fm-office` 命令仅在 Windows 上可用（基于 Office COM 组件）。
 +   `crack-zip` 破解 RAR 需要 `unrar` 后端程序（随附的 `assets/unrar.exe` 已内置）。
 
@@ -90,21 +90,38 @@ BookerPdfTool 2html <fname> [-d 输出目录]
 | `fname` | 文件或目录名 |
 | `-d, --dir` | 输出目录，默认当前目录 |
 
-### anime4k-auto：Anime4K 增强图片
+### auto-scale：S-Spline 缩放增强图片
 
-用 Anime4K 对图片做缩放增强，适合扫描版图片降噪提清晰度。
+用 S-Spline 三次 B 样条采样对图片做缩放增强，适合扫描版图片提升清晰度。会按图片短边宽度自动选择合适的缩放倍数：短边越小放大倍数越大。
 
 ```
-BookerPdfTool anime4k-auto <fname> [-G] [-t 线程数]
+BookerPdfTool auto-scale <fname> [-t 线程数]
 ```
 
 | 参数 | 说明 |
 | --- | --- |
 | `fname` | 文件或目录名 |
-| `-G, --gpu` | 使用 GPU 推理 |
 | `-t, --threads` | 线程数，默认 8 |
 
-需要将 Anime4KCPP_CLI 加入系统 PATH（见「可选依赖」）。
+自动缩放倍数（按短边宽度）：<800 放大 4 倍，<900 放大 3.5 倍，<1000 放大 3 倍，<1200 放大 2.5 倍，<1600 放大 2 倍，<2000 放大 1.5 倍，<3200 放大 1 倍，<4200 缩小为 0.75，否则缩小为 0.5。
+
+### sspline：图片 S-Spline 缩放
+
+对单张图片做 S-Spline 三次 B 样条采样缩放，可指定目标宽高或缩放倍数。
+
+```
+BookerPdfTool sspline <input> [-o 输出] [-iw 宽] [-ih 高] [-x 倍数]
+```
+
+| 参数 | 说明 |
+| --- | --- |
+| `input` | 输入图片 |
+| `-o, --output` | 输出图片，默认覆盖输入文件 |
+| `-iw, --width` | 目标宽度（像素） |
+| `-ih, --height` | 目标高度（像素） |
+| `-x, --multiple` | 缩放倍数，默认 2 |
+
+需指定目标宽高（`-iw` 与 `-ih` 同时给出）或缩放倍数（`-x`）之一。
 
 ### pack：图片打包成 PDF
 
@@ -150,37 +167,19 @@ BookerPdfTool crack-zip <fname> [-p 密码字典] [-t 线程数]
 
 ### auto：一键全自动处理 PDF
 
-一条命令完成整套流程：`ext` 抽图 → `tog-bw` 黑白纠正 → `anime4k-auto` 增强 → 二值化 → `pack` 打包回 PDF。
+一条命令完成整套流程：`ext` 抽图 → `tog-bw` 黑白纠正 → `auto-scale` 缩放 → `imgyaso` 二值化 → `pack` 打包回 PDF。
 
 ```
-BookerPdfTool auto <fname> [-t 线程数] [-G] [-w]
+BookerPdfTool auto <fname> [-t 线程数] [-w]
 ```
 
 | 参数 | 说明 |
 | --- | --- |
 | `fname` | PDF 文件或目录名 |
 | `-t, --threads` | 线程数，默认 8 |
-| `-G, --gpu` | Anime4K 使用 GPU |
 | `-w, --whole` | 抽取整页截图 |
 
-原文件会备份为 `xxx.pdf.bak`。同样需要 Anime4KCPP_CLI。
-
-### pick-scan：甄别扫描版 PDF
-
-根据页面图片占比判断每本 PDF 是「扫描版」还是「文字版」，并移动到对应子目录。
-
-```
-BookerPdfTool pick-scan <dir> [-i 图片面积占比] [-s 扫描页占比] [-t 线程数]
-```
-
-| 参数 | 说明 |
-| --- | --- |
-| `dir` | 存放 PDF 的目录 |
-| `-i, --imgs-area-rate` | 页面图片面积占比高于该值则视为扫描页，默认 0.8 |
-| `-s, --scanned-pg-rate` | 扫描页占比高于该值则整本视为扫描版，默认 0.8 |
-| `-t, --threads` | 线程数，默认 8 |
-
-结果分别移动到 `dir/扫描版` 与 `dir/文字版`。
+原文件会备份为 `xxx.pdf.bak`。需要将 `imgyaso` 二值化工具加入系统 PATH（见「可选依赖」）。
 
 ### pdg2pic：PDG 转图片
 
