@@ -2,10 +2,14 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import sys
 from . import __version__
 from . import office_tool, img_tool, html_tool, toggle_bw, zip_tool, pdg_tool, dedup, sspline
 
 def main():
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
     parser = argparse.ArgumentParser(prog="BookerPdfTool", description="iBooker PDF tool", formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("-v", "--version", action="version", version=f"BookerPdfTool version: {__version__}")
     parser.set_defaults(func=lambda x: parser.print_help())
