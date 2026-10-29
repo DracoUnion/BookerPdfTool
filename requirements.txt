@@ -8,3 +8,11 @@ numpy
 pillow
 opencv-python
 pyjbig2enc
+openai
+pydantic
+json-repair
+ctx-compact
+pyturndown
+tqdm
+httpx
+PyYAML

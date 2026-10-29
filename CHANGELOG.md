@@ -1,5 +1,10 @@
 # 历史记录
 
+v2026.10.29
+
++   新增 `ocr` 子命令：使用 OpenAI 兼容视觉模型将扫描版 PDF OCR 为 Markdown
++   引入 OpenAI 客户端及通用参数（`-m/-k/-H/-vm/-st` 等），支持 API Key/Base URL/模型环境变量
+
 v2023.7.22
 
 +   JBIG2 相关功能放到单独模块，添加其依赖

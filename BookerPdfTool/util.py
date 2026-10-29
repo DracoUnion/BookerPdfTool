@@ -8,7 +8,12 @@ import shutil
 import json
 import traceback
 import fitz
+import hashlib
+import ctypes
+import yaml
 from functools import reduce
+from typing import Any, List, Optional, Type, Tuple
+from pydantic import BaseModel, parse_obj_as, ValidationError
 from urllib.parse import quote_plus
 from PIL import ImageFile
 from os import path
@@ -18,6 +23,8 @@ from collections import OrderedDict
 import imgyaso
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
+from PIL import Image
+Image.MAX_IMAGE_PIXELS = None
 fitz.Document.is_image = fitz.Document.xref_is_image
 
 RE_YAML_META = r'<!--yml([\s\S]+?)-->'
@@ -154,8 +161,96 @@ def safe(default=None):
             try: return f(*args, **kw)
             except KeyboardInterrupt:
                 raise
-            except: 
+            except:
                 traceback.print_exc()
                 return default
         return inner
     return outer
+
+
+def md5(text: str):
+    return hashlib.md5(text.encode('utf8')).hexdigest()
+
+
+def gen_objs_md5(*args):
+    args = [o if isinstance(o, str) else json_dump_model(o) for o in args]
+    return '_'.join(md5(o) for o in args)
+
+
+def get_md_title(text):
+    m = re.search(r'^#+\x20+(.+?)$', text, flags=re.M)
+    if not m:
+        return None, (None, None)
+    return m.group(1).strip(), m.span(1)
+
+
+def to_kebab(name: str) -> str:
+    s = re.sub(r"[^\w\s一-鿿\-]", "", name)
+    s = re.sub(r"[\s_]+", "-", s).strip("-").lower()
+    return s[:60] or "unnamed"
+
+
+def extname(fname):
+    m = re.search(r'\.(\w+)$', fname)
+    return m.group(1) if m else ''
+
+
+def render_prompt(prompt: str, **kw):
+    return re.sub(r"{(\w+)}", lambda g: kw.get(g.group(1), g.group(0)), prompt)
+
+
+ext_code_block = lambda s: re.search(r'```\w*([\s\S]+)```', s).group(1)
+ext_cont_block = lambda s: re.search(r'\[content\]([\s\S]+)\[/content\]', s).group(1)
+
+
+def malloc_trim_linux():
+    if sys.platform == 'linux':
+        libc = ctypes.CDLL("libc.so.6")
+        libc.malloc_trim(0)
+
+
+def read_text(fname: str):
+    if not path.isfile(fname):
+        return None
+    text = open(fname, encoding='utf8').read()
+    chs = set(text)
+    if len(chs) == 1 and '\x00' in chs:
+        text = ""
+    return text
+
+
+def write_text(fname: str, text: str, append: bool = False) -> None:
+    parent = path.dirname(fname)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    open(fname, 'a' if append else 'w', encoding='utf8').write(text)
+
+
+def json_dump_model(obj) -> str:
+    if isinstance(obj, BaseModel):
+        obj = obj.model_dump()
+    elif isinstance(obj, list):
+        obj = [it.dict() if isinstance(it, BaseModel) else it for it in obj]
+    return json.dumps(obj, ensure_ascii=False)
+
+
+def write_yaml_model(fname: str, obj: Any) -> None:
+    if isinstance(obj, BaseModel):
+        obj = obj.model_dump()
+    elif isinstance(obj, list):
+        obj = [it.dict() if isinstance(it, BaseModel) else it for it in obj]
+    parent = path.dirname(fname)
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+    with open(fname, 'w', encoding='utf8') as f:
+        yaml.safe_dump(obj, f, allow_unicode=True, sort_keys=False)
+
+
+def read_yaml_model(fname: str, model: Optional[Type[BaseModel]] = None):
+    if not path.isfile(fname) or not path.getsize(fname):
+        return None
+    try:
+        data = yaml.safe_load(open(fname, encoding='utf8').read())
+        return parse_obj_as(model, data) if model else data
+    except (yaml.error.YAMLError, ValidationError):
+        return None

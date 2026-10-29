@@ -77,6 +77,37 @@ BookerPdfTool ext <fname> [-d 输出目录] [-w]
 | `-d, --dir` | 输出目录，默认当前目录 |
 | `-w, --whole` | 整页截图，不抽取内嵌图片 |
 
+### ocr：PDF OCR 转 Markdown
+
+使用视觉模型识别扫描版 PDF，并生成可处理的 Markdown 文本。需要配置 OpenAI 兼容 API：
+
+```
+set OPENAI_API_KEY=你的 API Key
+BookerPdfTool ocr <fname> [-vm 视觉模型] [-H API 地址]
+```
+
+也可以通过 `-k/--key`、`-m/--model`、`-vm/--vmodel`、`-H/--host`、`-r/--retry`、`-tm/--temp`、`-st/--stream` 等通用参数配置请求。常用 OCR 参数：
+
+| 参数 | 说明 |
+| --- | --- |
+| `fname` | PDF 文件或目录名 |
+| `--dpi` | 渲染 DPI，默认 150 |
+| `--trans` | 翻译识别结果 |
+| `--clean` | 清理标题 |
+| `--split` | 划分章节 |
+| `-sl, --split-limit` | 章节分块上限，默认 3000 |
+| `-so, --split-overlap` | 章节分块重叠，默认 50 |
+| `-md, --mkdir` | 为输出创建独立目录 |
+| `-ft, --file-threads` | 文件线程数，默认 1 |
+| `-pt, --page-threads` | 页面线程数，默认 8 |
+| `-l, --limit` | 分组文本上限，默认 8000 |
+| `-D, --debug` | 调试模式 |
+| `-tt, --text-thres` | 文本页判断阈值，默认 20 |
+| `-it, --img-thres` | 图片覆盖率阈值，默认 0.8 |
+| `-fo, --force-ocr` | 强制使用 OCR |
+
+OCR 过程会在输入文件附近缓存中间结果；视觉识别需要配置支持图片输入的模型。
+
 ### 2html：PDF 转 HTML
 
 将 PDF 每页渲染为 HTML，并识别行内代码 / 代码块 / 标题、处理缩进。

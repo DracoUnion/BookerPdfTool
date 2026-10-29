@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "BookerPdfTool"
-version = "2023.7.22.0"
+version = "2026.10.29.0"
 description = "iBooker/DracoUnion PDF 工具"
 readme = "README.md"
 license = {text = "SATA"}
@@ -50,6 +50,14 @@ dependencies = [
     "pillow",
     "opencv-python",
     "pyjbig2enc",
+    "openai",
+    "pydantic",
+    "json-repair",
+    "ctx-compact",
+    "pyturndown",
+    "tqdm",
+    "httpx",
+    "PyYAML",
 ]
 
 [project.urls]
