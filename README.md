@@ -86,7 +86,7 @@ set OPENAI_API_KEY=你的 API Key
 BookerPdfTool ocr <fname> [-vm 视觉模型] [-H API 地址]
 ```
 
-也可以通过 `-k/--key`、`-m/--model`、`-vm/--vmodel`、`-H/--host`、`-r/--retry`、`-tm/--temp`、`-st/--stream` 等通用参数配置请求。常用 OCR 参数：
+也可以通过 `-k/--key`、`-m/--model`、`-vm/--vmodel`、`-H/--host`、`-r/--retry`、`-tm/--temp`、`-ST/--no-stream` 等通用参数配置请求。常用 OCR 参数：
 
 | 参数 | 说明 |
 | --- | --- |
@@ -101,7 +101,7 @@ BookerPdfTool ocr <fname> [-vm 视觉模型] [-H API 地址]
 | `-ft, --file-threads` | 文件线程数，默认 1 |
 | `-pt, --page-threads` | 页面线程数，默认 8 |
 | `-l, --limit` | 分组文本上限，默认 8000 |
-| `-D, --debug` | 调试模式 |
+| `-D, --debug`（全局） | 调试模式 |
 | `-tt, --text-thres` | 文本页判断阈值，默认 20 |
 | `-it, --img-thres` | 图片覆盖率阈值，默认 0.8 |
 | `-fo, --force-ocr` | 强制使用 OCR |
